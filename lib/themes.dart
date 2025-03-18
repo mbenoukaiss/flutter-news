@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 ThemeData theme() {
   return ThemeData(
     colorScheme: const ColorScheme.light(
-      primary: Colors.white,
+      primary: Color(0xFF3165A1),
       secondary: Color(0xFFA8A8A8),
     ),
     fontFamily: "Poppins",
@@ -19,13 +19,14 @@ ThemeData theme() {
 
 AppBarTheme appBarTheme() {
   return const AppBarTheme(
-    color: Colors.white,
+    backgroundColor: Colors.white,
+    surfaceTintColor: Colors.white,
     elevation: 0,
     centerTitle: true,
     iconTheme: IconThemeData(color: Colors.black),
     titleTextStyle: TextStyle(
       color: Colors.black,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w800,
       fontSize: 18,
     ),
   );

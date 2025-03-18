@@ -34,7 +34,7 @@ class ArticleFetcherAdapter implements ArticleFetcher {
         final publishedAt = DateTime.parse(article["publishedAt"]);
         final articleDto = Article(
           url: article["url"],
-          author: article["author"] ?? article["source"]["name"] ?? null,
+          author: article["author"] ?? article["source"]["name"],
           title: article["title"],
           description: article["description"],
           imageUrl: article["urlToImage"],

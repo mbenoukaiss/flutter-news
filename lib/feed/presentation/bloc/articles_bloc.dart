@@ -42,6 +42,8 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
 
   ArticlesBloc(this.getArticles): super(const ArticlesLoadingState()) {
     on<LoadArticlesEvent>((LoadArticlesEvent event, Emitter<ArticlesState> emit) async {
+      emit(const ArticlesLoadingState());
+
       final Response<List<Article>> response = await getArticles();
       if (response.succeeded) {
         emit(ArticlesLoadedState(response.data!));

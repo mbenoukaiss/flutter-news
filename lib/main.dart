@@ -1,8 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:get_it/get_it.dart";
-import "package:news/feed/domain/port/article_fetcher.dart";
-import "package:news/feed/domain/usecase/get_articles.dart";
 import "package:news/feed/presentation/bloc/articles_bloc.dart";
 import "package:news/themes.dart";
 

@@ -29,9 +29,15 @@ class ArticleCard extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           Text(
-            article.description ?? "",
+            "${article.description ?? "No description available"}\n",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontStyle:
+                  article.description == null
+                      ? FontStyle.italic
+                      : FontStyle.normal,
+            ),
           ),
 
           Text(
@@ -53,20 +59,34 @@ class ArticleCard extends StatelessWidget {
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).colorScheme.secondary.withAlpha(0x22),
           borderRadius: BorderRadius.circular(16),
         ),
         child: AspectRatio(
           aspectRatio: 1,
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: CachedNetworkImage(
-              imageUrl: article.imageUrl ?? "https://placehold.co/200",
-              placeholder: (_, _) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) {
-                return const Icon(Icons.error, color: Colors.white, size: 10);
-              },
-            ),
+          child: CachedNetworkImage(
+            imageUrl: article.imageUrl ?? "https://placehold.co/200",
+            placeholder: (_, _) {
+              return const Center(
+                child: const SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: const CircularProgressIndicator(),
+                ),
+              );
+            },
+            imageBuilder: (context, imageProvider) {
+              return FittedBox(
+                fit: BoxFit.cover,
+                child: Image(image: imageProvider),
+              );
+            },
+            errorWidget: (context, url, error) {
+              return const Icon(
+                Icons.image_not_supported_outlined,
+                color: Colors.white,
+              );
+            },
           ),
         ),
       ),

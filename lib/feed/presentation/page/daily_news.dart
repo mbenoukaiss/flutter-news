@@ -8,7 +8,15 @@ class DailyNews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildAppbar(), body: _buildBody());
+    return Scaffold(
+      appBar: _buildAppbar(),
+      body: RefreshIndicator(
+        child: _buildBody(),
+        onRefresh: () async {
+          context.read<ArticlesBloc>().add(const LoadArticlesEvent());
+        },
+      ),
+    );
   }
 
   AppBar _buildAppbar() {
@@ -18,29 +26,37 @@ class DailyNews extends StatelessWidget {
   Widget _buildBody() {
     return BlocBuilder<ArticlesBloc, ArticlesState>(
       builder: (context, state) {
-        if (state is ArticlesLoadingState) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (state is ArticlesLoadedState) {
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: ListView.separated(
-              itemCount: state.articles.length,
-              separatorBuilder: (_, _) => const Divider(),
-              itemBuilder: (context, index) {
-                return ArticleCard(state.articles[index]);
-              },
-            ),
-          );
-        }
-
-        if (state is ArticlesErrorState) {
-          return Center(child: Text(state.message));
-        }
-
-        throw Exception("Unhandled state: $state");
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 100),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          child: _buildBloc(context, state),
+        );
       },
     );
+  }
+
+  Widget _buildBloc(BuildContext context, ArticlesState state) {
+    if (state is ArticlesLoadingState) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state is ArticlesLoadedState) {
+      return ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: state.articles.length,
+        separatorBuilder: (_, _) => const Divider(),
+        itemBuilder: (context, index) {
+          return ArticleCard(state.articles[index]);
+        },
+      );
+    }
+
+    if (state is ArticlesErrorState) {
+      return Center(child: Text(state.message));
+    }
+
+    throw Exception("Unhandled state: $state");
   }
 }
