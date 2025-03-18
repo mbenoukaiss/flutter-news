@@ -11,12 +11,51 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  flutter_dotenv: ^5.2.1
+  equatable: ^2.0.7
+  intl: ^0.20.2
+  dio: ^5.8.0+1
+
+  get_it: ^8.0.3
+  injectable: ^2.5.0
+  flutter_bloc: ^9.1.0
+
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+  build_runner:
+  injectable_generator:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - .env
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/poppins/regular.ttf
+          weight: 400
+        - asset: assets/fonts/poppins/regular-italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/poppins/medium.ttf
+          weight: 500
+        - asset: assets/fonts/poppins/medium-italic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/poppins/semibold.ttf
+          weight: 600
+        - asset: assets/fonts/poppins/semibold-italic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/poppins/bold.ttf
+          weight: 700
+        - asset: assets/fonts/poppins/bold-italic.ttf
+          weight: 700
+          style: italic
