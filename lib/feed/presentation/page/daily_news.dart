@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:news/feed/presentation/bloc/articles_bloc.dart";
 import "package:news/feed/presentation/widget/article_card.dart";
+import "package:news/feed/presentation/widget/search_input.dart";
 
 class DailyNews extends StatelessWidget {
   const DailyNews({super.key});
@@ -26,12 +27,27 @@ class DailyNews extends StatelessWidget {
   Widget _buildBody() {
     return BlocBuilder<ArticlesBloc, ArticlesState>(
       builder: (context, state) {
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 100),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          child: _buildList(context, state),
+        return Column(
+          children: [
+            SearchInput(
+              onChanged: (value) {
+                if (value == null) {
+                  context.read<ArticlesBloc>().add(const LoadArticlesEvent());
+                } else {
+                  context.read<ArticlesBloc>().add(SearchArticlesEvent(value));
+                }
+              },
+            ),
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 100),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: _buildList(context, state),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -42,7 +58,7 @@ class DailyNews extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state is ArticlesLoadedState) {
+    if (state is ArticlesListState) {
       return ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: state.articles.length,

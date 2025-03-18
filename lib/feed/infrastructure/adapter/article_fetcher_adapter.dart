@@ -18,7 +18,12 @@ class ArticleFetcherAdapter implements ArticleFetcher {
   ArticleFetcherAdapter(this.config, this.dio);
 
   @override
-  Future<Response<List<Article>>> fetchArticles() async {
+  Future<Response<List<Article>>> allArticles() async {
+    return await searchArticles(null);
+  }
+
+  @override
+  Future<Response<List<Article>>> searchArticles(String? search) async {
     try {
       final response = await dio.get(
         "$baseUrl/top-headlines",
@@ -26,6 +31,7 @@ class ArticleFetcherAdapter implements ArticleFetcher {
           "country": "us",
           "sortBy": "publishedAt",
           "apiKey": config.newsApiKey,
+          ...search != null ? {"q": search} : {},
         },
       );
 

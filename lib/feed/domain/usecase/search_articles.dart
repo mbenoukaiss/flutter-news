@@ -5,12 +5,12 @@ import "package:news/feed/domain/port/article_fetcher.dart";
 import "../../../core/type/response.dart";
 
 @Singleton()
-class GetArticles {
+class SearchArticles {
   final ArticleFetcher articleFetcher;
 
-  GetArticles(this.articleFetcher);
+  SearchArticles(this.articleFetcher);
 
-  Future<Response<List<Article>>> call() async {
-    return articleFetcher.allArticles();
+  Future<Response<List<Article>>> call(String search) async {
+    return articleFetcher.searchArticles(search);
   }
 }
