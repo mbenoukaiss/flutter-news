@@ -31,13 +31,13 @@ class DailyNews extends StatelessWidget {
           transitionBuilder: (Widget child, Animation<double> animation) {
             return FadeTransition(opacity: animation, child: child);
           },
-          child: _buildBloc(context, state),
+          child: _buildList(context, state),
         );
       },
     );
   }
 
-  Widget _buildBloc(BuildContext context, ArticlesState state) {
+  Widget _buildList(BuildContext context, ArticlesState state) {
     if (state is ArticlesLoadingState) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -48,7 +48,10 @@ class DailyNews extends StatelessWidget {
         itemCount: state.articles.length,
         separatorBuilder: (_, _) => const Divider(),
         itemBuilder: (context, index) {
-          return ArticleCard(state.articles[index]);
+          return ArticleCard(
+            key: Key(index.toString()),
+            article: state.articles[index],
+          );
         },
       );
     }

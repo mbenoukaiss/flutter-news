@@ -1,16 +1,66 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
+import "package:news/config/getit.dart";
 import "package:news/feed/domain/model/article.dart";
+import "package:news/feed/presentation/bloc/read_articles_bloc.dart";
+import "package:url_launcher/url_launcher_string.dart";
 
 class ArticleCard extends StatelessWidget {
   final Article article;
 
-  const ArticleCard(this.article, {super.key});
+  const ArticleCard({required Key super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
-    return Row(spacing: 10, children: [_image(context), _content(context)]);
+    return BlocProvider<ReadArticleBloc>(
+      create: (context) {
+        return getIt(param1: article.url)..add(const LoadStatusEvent());
+      },
+      child: BlocBuilder<ReadArticleBloc, ReadArticleState>(builder: _card),
+    );
+  }
+
+  Widget _card(BuildContext context, ReadArticleState state) {
+    final readBloc = context.read<ReadArticleBloc>();
+    final bool isRead = state is ReadArticleLoadedState && state.read;
+
+    final Widget content = Row(
+      spacing: 10,
+      children: [_image(context), _content(context)],
+    );
+
+    return GestureDetector(
+      onTap: () async {
+        readBloc.add(ToggleArticleEvent(article.url, true));
+        await launchUrlString(article.url);
+      },
+      child: Dismissible(
+        key: key!,
+        direction: DismissDirection.endToStart,
+        confirmDismiss: (direction) async {
+          readBloc.add(ToggleArticleEvent(article.url, null));
+          return false;
+        },
+        background: Container(
+          color: Theme.of(context).colorScheme.primary,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Icon(Icons.mark_email_read, color: Colors.white),
+              const SizedBox(width: 10),
+              Text(
+                isRead ? "Mark as unread" : "Mark as read",
+                style: const TextStyle(color: Colors.white),
+              ),
+              const SizedBox(width: 20),
+            ],
+          ),
+        ),
+        child: isRead ? Opacity(opacity: 0.5, child: content) : content,
+      ),
+    );
   }
 
   Widget _content(BuildContext context) {

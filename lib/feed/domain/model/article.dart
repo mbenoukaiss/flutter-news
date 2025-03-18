@@ -1,5 +1,7 @@
 import "package:equatable/equatable.dart";
+import "package:meta/meta.dart";
 
+@immutable
 class Article extends Equatable {
   final String url;
   final String? author;

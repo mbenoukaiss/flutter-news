@@ -1,4 +1,5 @@
 import "dart:io";
+
 import "package:dio/dio.dart" show Dio, DioException;
 import "package:injectable/injectable.dart";
 import "package:news/feed/domain/port/article_fetcher.dart";
@@ -19,29 +20,33 @@ class ArticleFetcherAdapter implements ArticleFetcher {
   @override
   Future<Response<List<Article>>> fetchArticles() async {
     try {
-      final response = await dio.get("$baseUrl/top-headlines", queryParameters: {
-        "country": "us",
-        "sortBy": "publishedAt",
-        "apiKey": config.newsApiKey,
-      });
+      final response = await dio.get(
+        "$baseUrl/top-headlines",
+        queryParameters: {
+          "country": "us",
+          "sortBy": "publishedAt",
+          "apiKey": config.newsApiKey,
+        },
+      );
 
-      if (response.statusCode != HttpStatus.ok || response.data["status"] != "ok") {
+      if (response.statusCode != HttpStatus.ok ||
+          response.data["status"] != "ok") {
         return Response.error("News API returned an error");
       }
 
       final List<Article> articles = [];
-      for (final article in response.data["articles"]) {
-        final publishedAt = DateTime.parse(article["publishedAt"]);
-        final articleDto = Article(
-          url: article["url"],
-          author: article["author"] ?? article["source"]["name"],
-          title: article["title"],
-          description: article["description"],
-          imageUrl: article["urlToImage"],
+      for (final articleDto in response.data["articles"]) {
+        final publishedAt = DateTime.parse(articleDto["publishedAt"]);
+        final article = Article(
+          url: articleDto["url"],
+          author: articleDto["author"] ?? articleDto["source"]["name"],
+          title: articleDto["title"],
+          description: articleDto["description"],
+          imageUrl: articleDto["urlToImage"],
           publishedAt: publishedAt,
         );
 
-        articles.add(articleDto);
+        articles.add(article);
       }
 
       return Response.success(articles);
