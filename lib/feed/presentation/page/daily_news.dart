@@ -14,7 +14,7 @@ class DailyNews extends StatelessWidget {
       body: RefreshIndicator(
         child: _buildBody(),
         onRefresh: () async {
-          context.read<ArticlesBloc>().add(const LoadArticlesEvent());
+          context.read<ArticlesBloc>().add(const ReloadArticlesEvent());
         },
       ),
     );
@@ -31,11 +31,9 @@ class DailyNews extends StatelessWidget {
           children: [
             SearchInput(
               onChanged: (value) {
-                if (value == null) {
-                  context.read<ArticlesBloc>().add(const LoadArticlesEvent());
-                } else {
-                  context.read<ArticlesBloc>().add(SearchArticlesEvent(value));
-                }
+                context.read<ArticlesBloc>().add(
+                  ReloadArticlesEvent(search: value),
+                );
               },
             ),
             Expanded(
@@ -61,9 +59,18 @@ class DailyNews extends StatelessWidget {
     if (state is ArticlesListState) {
       return ListView.separated(
         padding: const EdgeInsets.all(16),
-        itemCount: state.articles.length,
         separatorBuilder: (_, _) => const Divider(),
+        itemCount: state.articles.length + (state.reachedTheEnd ? 0 : 1),
         itemBuilder: (context, index) {
+          if (index >= state.articles.length) {
+            context.read<ArticlesBloc>().add(const LoadNextPageEvent());
+
+            return const Padding(
+              padding: EdgeInsets.all(16),
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
+
           return ArticleCard(
             key: Key(index.toString()),
             article: state.articles[index],

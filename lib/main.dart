@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ArticlesBloc>(
-          create: (context) => getIt()..add(const LoadArticlesEvent()),
+          create: (context) => getIt()..add(const ReloadArticlesEvent()),
         ),
       ],
       child: MaterialApp(

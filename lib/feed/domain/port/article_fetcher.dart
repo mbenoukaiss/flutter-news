@@ -1,9 +1,8 @@
 import "package:news/core/type/response.dart";
 
-import "../model/article.dart";
+import "../dto/search_query.dart";
+import "../dto/search_result.dart";
 
 abstract interface class ArticleFetcher {
-  Future<Response<List<Article>>> allArticles();
-
-  Future<Response<List<Article>>> searchArticles(String search);
+  Future<Response<SearchResult>> searchArticles(SearchQuery search);
 }

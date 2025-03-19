@@ -6,20 +6,19 @@ class Response<T> {
   final T? data;
   final Error? error;
 
-  const Response({
-    this.data,
-    this.error,
-  });
+  const Response({this.data, this.error});
 
   factory Response.success(T data) => Response(data: data);
 
   factory Response.error(dynamic error) {
-    if (error is DioException) {
+    if (error is Error) {
+      return Response(error: error);
+    } else if (error is DioException) {
       return Response(error: Error.fromDio(error));
-    } else if(error is String) {
+    } else if (error is String) {
       return Response(error: Error(message: error));
     } else {
-      throw ArgumentError("Unknown error type");
+      throw ArgumentError("Unknown error type ${error.runtimeType}");
     }
   }
 

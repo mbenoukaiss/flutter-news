@@ -14,23 +14,38 @@ class _SearchInputState extends State<SearchInput> {
 
   bool hasText = false;
 
+  void _onChanged(String? value) {
+    final bool hasText = value?.isNotEmpty ?? false;
+
+    setState(() {
+      this.hasText = hasText;
+    });
+
+    widget.onChanged(hasText ? value : null);
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget? eraseButton;
+    if (hasText) {
+      eraseButton = IconButton(
+        onPressed: () {
+          _controller.clear();
+          _onChanged(null);
+        },
+        icon: const Icon(Icons.clear),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: TextField(
         controller: _controller,
-        onChanged: widget.onChanged,
+        onChanged: _onChanged,
         decoration: InputDecoration(
           hintText: "Search",
           prefixIcon: const Icon(Icons.search),
-          suffixIcon: IconButton(
-            onPressed: () {
-              _controller.clear();
-              widget.onChanged(null);
-            },
-            icon: const Icon(Icons.clear),
-          ),
+          suffixIcon: eraseButton,
           border: InputBorder.none,
         ),
       ),
