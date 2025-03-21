@@ -90,12 +90,29 @@ class ArticleCard extends StatelessWidget {
             ),
           ),
 
-          Text(
-            "${article.author ?? "Unknown"} | ${DateFormat.yMd(locale).add_jm().format(article.publishedAt)}",
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 12,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  article.author ?? "Unknown",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 5),
+              Text(
+                DateFormat.yMd(locale).add_jm().format(article.publishedAt),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ),
         ],
       ),

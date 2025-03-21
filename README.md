@@ -1,9 +1,10 @@
 # News
 
 ## Features to implement
-- Pull to refresh
-- Search for a specific query
-- Choose a news category
-- Mark an article as read or add to a list of favorites
-- On tablet, view news in a two-column layout and the second column is a the news page
-- Infinite scroll
+- [x] Pull to refresh
+- [x] Search for a specific query
+- [x] Choose a news category
+- [x] Mark an article as read
+- [ ] Add article to bookmarks
+- [ ] On tablet, view news in a two-column layout and the second column is a the news page
+- [x] Infinite scroll
