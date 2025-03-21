@@ -1,4 +1,4 @@
-enum Category {
+enum ArticleCategory {
   business,
   entertainment,
   general,
@@ -10,19 +10,19 @@ enum Category {
   @override
   String toString() {
     switch (this) {
-      case Category.business:
+      case ArticleCategory.business:
         return "Business";
-      case Category.entertainment:
+      case ArticleCategory.entertainment:
         return "Entertainment";
-      case Category.general:
+      case ArticleCategory.general:
         return "General";
-      case Category.health:
+      case ArticleCategory.health:
         return "Health";
-      case Category.science:
+      case ArticleCategory.science:
         return "Science";
-      case Category.sports:
+      case ArticleCategory.sports:
         return "Sports";
-      case Category.technology:
+      case ArticleCategory.technology:
         return "Technology";
     }
   }

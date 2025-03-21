@@ -1,8 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:news/feed/domain/dto/category.dart";
 import "package:news/feed/presentation/bloc/articles_bloc.dart";
 import "package:news/feed/presentation/widget/article_card.dart";
 import "package:news/feed/presentation/widget/search_input.dart";
+
+import "../../../core/type/option.dart";
 
 class DailyNews extends StatelessWidget {
   const DailyNews({super.key});
@@ -24,18 +27,50 @@ class DailyNews extends StatelessWidget {
     return AppBar(title: const Text("Daily news"));
   }
 
+  Widget _filters(BuildContext context, ArticlesState state) {
+    return Column(
+      children: [
+        SearchInput(
+          onChanged: (value) {
+            context.read<ArticlesBloc>().add(
+              ReloadArticlesEvent(search: Option.of(value)),
+            );
+          },
+        ),
+        SizedBox(
+          height: 50,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            scrollDirection: Axis.horizontal,
+            itemCount: ArticleCategory.values.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 5),
+            itemBuilder: (context, index) {
+              final ArticleCategory cat = ArticleCategory.values[index];
+
+              return ChoiceChip(
+                label: Text(cat.toString()),
+                selected: state is ArticlesListState && state.category == cat,
+                onSelected: (active) {
+                  context.read<ArticlesBloc>().add(
+                    ReloadArticlesEvent(
+                      category: active ? Option(cat) : const Option.none(),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildBody() {
     return BlocBuilder<ArticlesBloc, ArticlesState>(
       builder: (context, state) {
         return Column(
           children: [
-            SearchInput(
-              onChanged: (value) {
-                context.read<ArticlesBloc>().add(
-                  ReloadArticlesEvent(search: value),
-                );
-              },
-            ),
+            _filters(context, state),
             Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 100),

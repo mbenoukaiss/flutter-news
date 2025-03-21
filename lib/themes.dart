@@ -1,9 +1,11 @@
 import "package:flutter/material.dart";
 
+const primary = Color(0xFF3165A1);
+
 ThemeData theme() {
   return ThemeData(
     colorScheme: const ColorScheme.light(
-      primary: Color(0xFF3165A1),
+      primary: primary,
       secondary: Color(0xFFA8A8A8),
     ),
     fontFamily: "Poppins",
@@ -13,7 +15,21 @@ ThemeData theme() {
       thickness: 0.5,
       indent: 16,
       endIndent: 16,
-    )
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: Color.lerp(Colors.white, primary, 0.05),
+      selectedColor: primary,
+      checkmarkColor: Colors.white,
+      labelStyle: const TextStyle(color: primary),
+      secondaryLabelStyle: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: const BorderSide(color: primary, width: 0.3),
+      ),
+    ),
   );
 }
 
